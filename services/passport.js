@@ -5,6 +5,18 @@ const LinkedInStrategy = require('passport-linkedin-oauth2').Strategy;
 const keys = require("../config/keys");
 const User = mongoose.model('Users');
 
+passport.serializeUser((User, done) => {
+  done(null, User.identity)
+})
+
+passport.deserializeUser((id, done) => {
+  User.findById(id)
+    .then(user => {
+      done(null, user)
+    })
+    console.log("deserialized successfully")
+})
+
 passport.use(
   new GoogleStrategy(
     {
@@ -16,14 +28,17 @@ passport.use(
       // console.log("access token", accessToken);
       // console.log("refresh token", refreshToken);
       // console.log("profile", profile);
-      User.findOne({ id: profile.id })
+      User.findOne({ identity: profile.id })
         .then((existingUser) => {
           if (existingUser) {
             // do nothing as the user already exists
+            done(null, existingUser);
           }
           else {
             //user id not present. Create a new user with this id
-            new User({ id: profile.id }).save();
+            new User({ identity: profile.id }).save()
+              .then(user => done(null, existingUser))
+
           }
         })
     }
@@ -41,14 +56,14 @@ passport.use(
       // console.log("access token", accessToken);
       // console.log("refresh token", refreshToken);
       // console.log("profile", profile);
-      User.findOne({ id: profile.id })
+      User.findOne({ identity: profile.id })
         .then((existingUser) => {
           if (existingUser) {
             // do nothing as the user already exists
           }
           else {
             //user id not present. Create a new user with this id
-            new User({ id: profile.id }).save();
+            new User({ identity: profile.id }).save();
           }
         })
     }
