@@ -6,7 +6,7 @@ const keys = require("../config/keys");
 const User = mongoose.model('Users');
 
 passport.serializeUser((User, done) => {
-  done(null, User.identity)
+  done(null, User.id)
 })
 
 passport.deserializeUser((id, done) => {
@@ -14,7 +14,6 @@ passport.deserializeUser((id, done) => {
     .then(user => {
       done(null, user)
     })
-    console.log("deserialized successfully")
 })
 
 passport.use(
@@ -28,7 +27,7 @@ passport.use(
       // console.log("access token", accessToken);
       // console.log("refresh token", refreshToken);
       // console.log("profile", profile);
-      User.findOne({ identity: profile.id })
+      User.findOne({ userID: profile.id })
         .then((existingUser) => {
           if (existingUser) {
             // do nothing as the user already exists
@@ -36,7 +35,7 @@ passport.use(
           }
           else {
             //user id not present. Create a new user with this id
-            new User({ identity: profile.id }).save()
+            new User({ userID: profile.id }).save()
               .then(user => done(null, existingUser))
 
           }
@@ -56,14 +55,17 @@ passport.use(
       // console.log("access token", accessToken);
       // console.log("refresh token", refreshToken);
       // console.log("profile", profile);
-      User.findOne({ identity: profile.id })
+      User.findOne({ userID: profile.id })
         .then((existingUser) => {
           if (existingUser) {
             // do nothing as the user already exists
+            done(null, existingUser);
           }
           else {
             //user id not present. Create a new user with this id
-            new User({ identity: profile.id }).save();
+            new User({ userID: profile.id }).save()
+              .then(user => done(null, existingUser))
+
           }
         })
     }
