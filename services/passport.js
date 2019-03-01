@@ -11,7 +11,7 @@ passport.serializeUser((User, done) => {
 
 passport.deserializeUser((id, done) => {
   User.findById(id)
-    .then(user => {
+    .then(user => { 
       done(null, user)
     })
 })
@@ -21,7 +21,8 @@ passport.use(
     {
       clientID: keys.googleClientID,
       clientSecret: keys.googleClientSecret,
-      callbackURL: "/auth/google/callback"
+      callbackURL: "/auth/google/callback",
+      proxy: true
     },
     (accessToken, refreshToken, profile, done) => {
       // console.log("access token", accessToken);
@@ -49,7 +50,8 @@ passport.use(
     {
       clientID: keys.linkedinClientID,
       clientSecret: keys.linkedinClientSecret,
-      callbackURL: "/auth/linkedin/callback"
+      callbackURL: "/auth/linkedin/callback",
+      proxy: true
     },
     (accessToken, refreshToken, profile, done) => {
       // console.log("access token", accessToken);
