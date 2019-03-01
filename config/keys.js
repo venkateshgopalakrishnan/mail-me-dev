@@ -5,5 +5,5 @@ if(process.env.NODE_ENV === 'production')   {
 }
 else    {
     //we are in development - return dev keys
-    module.exports = require('./prod')
+    module.exports = require('./dev')
 }
