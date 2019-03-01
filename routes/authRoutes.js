@@ -2,7 +2,7 @@ const passport = require("passport");
 
 module.exports = (app) => {
   app.get("/", (req, res) => {
-    res.send({ hi: "There" });
+    res.send({ Hi: "There" });
   });
 
   app.get(
@@ -24,8 +24,7 @@ module.exports = (app) => {
   app.get("/auth/linkedin/callback", passport.authenticate("linkedin"));
 
   app.get("/api/current_user", (req, res) => {
-    res.send(req.session)
-    // res.send(req.user)
+    res.send(req.user)
   });
 
   app.get("/api/logout", (req, res) => {
