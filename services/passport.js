@@ -11,7 +11,7 @@ passport.serializeUser((User, done) => {
 
 passport.deserializeUser((id, done) => {
   User.findById(id)
-    .then(user => { 
+    .then(user => {
       done(null, user)
     })
 })
@@ -24,23 +24,16 @@ passport.use(
       callbackURL: "/auth/google/callback",
       proxy: true
     },
-    (accessToken, refreshToken, profile, done) => {
+    async (accessToken, refreshToken, profile, done) => {
       // console.log("access token", accessToken);
       // console.log("refresh token", refreshToken);
       // console.log("profile", profile);
-      User.findOne({ userID: profile.id })
-        .then((existingUser) => {
-          if (existingUser) {
-            // do nothing as the user already exists
-            done(null, existingUser);
-          }
-          else {
-            //user id not present. Create a new user with this id
-            new User({ userID: profile.id }).save()
-              .then(user => done(null, existingUser))
-
-          }
-        })
+      const existingUser = await User.findOne({ userID: profile.id })
+      if (existingUser) {
+        return done(null, existingUser);
+      }
+      const user = await new User({ userID: profile.id }).save()
+      done(null, existingUser)
     }
   )
 );
@@ -53,23 +46,16 @@ passport.use(
       callbackURL: "/auth/linkedin/callback",
       proxy: true
     },
-    (accessToken, refreshToken, profile, done) => {
+    async (accessToken, refreshToken, profile, done) => {
       // console.log("access token", accessToken);
       // console.log("refresh token", refreshToken);
       // console.log("profile", profile);
-      User.findOne({ userID: profile.id })
-        .then((existingUser) => {
-          if (existingUser) {
-            // do nothing as the user already exists
-            done(null, existingUser);
-          }
-          else {
-            //user id not present. Create a new user with this id
-            new User({ userID: profile.id }).save()
-              .then(user => done(null, existingUser))
-
-          }
-        })
+      const existingUser = await User.findOne({ userID: profile.id })
+      if (existingUser) {
+        return done(null, existingUser);
+      }
+      const user = await new User({ userID: profile.id }).save()
+      done(null, existingUser)
     }
   )
 );
